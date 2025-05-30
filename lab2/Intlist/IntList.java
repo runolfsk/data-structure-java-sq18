@@ -59,6 +59,7 @@ public class IntList {
             L = L.rest;
             ptr = ptr.rest;
         }
+
         return res;
     }
 
@@ -82,7 +83,18 @@ public class IntList {
 
     public static IntList dcatenate(IntList A, IntList B) {
         //TODO:  fill in method
-        return null;
+        if (A == null) {
+            return B;
+        }
+        if (B == null) {
+            return A;
+        }
+        IntList headOfA = A;
+        while(A.rest != null) {
+            A = A.rest;
+        }
+        A.rest = B;
+        return headOfA;
     }
 
     /**
@@ -91,7 +103,22 @@ public class IntList {
      */
     public static IntList catenate(IntList A, IntList B) {
         //TODO:  fill in method
-        return null;
+        if (A == null) {
+            return B;
+        }
+        if (B == null) {
+            return A;
+        }
+        IntList new_list = new IntList(A.first,null);//新列表的头
+        IntList currentTail = new_list;//新列表的尾部
+        A = A.rest;
+        while (A != null) {
+            currentTail.rest = new IntList(A.first,null);//在尾部添加新节点
+            currentTail = currentTail.rest;//更新尾部节点
+            A = A.rest;
+        }
+        currentTail.rest = B;
+        return new_list;
     }
 
 
