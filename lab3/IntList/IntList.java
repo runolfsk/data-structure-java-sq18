@@ -7,7 +7,7 @@ import java.util.Formatter;
  * @author P. N. Hilfinger, with some modifications by Josh Hug and melaniecebula
  *         [Do not modify this file.]
  */
-public class IntList1 {
+public class IntList {
     /**
      * First element of list.
      */
@@ -15,12 +15,12 @@ public class IntList1 {
     /**
      * Remaining elements of list.
      */
-    public IntList1 rest;
+    public IntList rest;
 
     /**
      * A List with first FIRST0 and rest REST0.
      */
-    public IntList1(int first0, IntList1 rest0) {
+    public IntList(int first0, IntList rest0) {
         first = first0;
         rest = rest0;
     }
@@ -28,7 +28,7 @@ public class IntList1 {
     /**
      * A List with null rest, and first = 0.
      */
-    public IntList1() {
+    public IntList() {
     /* NOTE: public IntList () { }  would also work. */
         this(0, null);
     }
@@ -36,7 +36,7 @@ public class IntList1 {
     /**
      * Returns a list equal to L with all elements squared. Destructive.
      */
-    public static void dSquareList(IntList1 L) {
+    public static void dSquareList(IntList L) {
 
         while (L != null) {
             L.first = L.first * L.first;
@@ -47,15 +47,15 @@ public class IntList1 {
     /**
      * Returns a list equal to L with all elements squared. Non-destructive.
      */
-    public static IntList1 squareListIterative(IntList1 L) {
+    public static IntList squareListIterative(IntList L) {
         if (L == null) {
             return null;
         }
-        IntList1 res = new IntList1(L.first * L.first, null);
-        IntList1 ptr = res;
+        IntList res = new IntList(L.first * L.first, null);
+        IntList ptr = res;
         L = L.rest;
         while (L != null) {
-            ptr.rest = new IntList1(L.first * L.first, null);
+            ptr.rest = new IntList(L.first * L.first, null);
             L = L.rest;
             ptr = ptr.rest;
         }
@@ -66,11 +66,11 @@ public class IntList1 {
     /**
      * Returns a list equal to L with all elements squared. Non-destructive.
      */
-    public static IntList1 squareListRecursive(IntList1 L) {
+    public static IntList squareListRecursive(IntList L) {
         if (L == null) {
             return null;
         }
-        return new IntList1(L.first * L.first, squareListRecursive(L.rest));
+        return new IntList(L.first * L.first, squareListRecursive(L.rest));
     }
 
     /** DO NOT MODIFY ANYTHING ABOVE THIS LINE! */
@@ -81,7 +81,7 @@ public class IntList1 {
      * *  elements of B.  May modify items of A. Don't use 'new'.
      */
 
-    public static IntList1 dcatenate(IntList1 A, IntList1 B) {
+    public static IntList dcatenate(IntList A, IntList B) {
         //TODO:  fill in method
         if (A == null) {
             return B;
@@ -89,7 +89,7 @@ public class IntList1 {
         if (B == null) {
             return A;
         }
-        IntList1 headOfA = A;
+        IntList headOfA = A;
         while(A.rest != null) {
             A = A.rest;
         }
@@ -101,7 +101,7 @@ public class IntList1 {
      * Returns a list consisting of the elements of A followed by the
      * * elements of B.  May NOT modify items of A.  Use 'new'.
      */
-    public static IntList1 catenate(IntList1 A, IntList1 B) {
+    public static IntList catenate(IntList A, IntList B) {
         //TODO:  fill in method
         if (A == null) {
             return B;
@@ -109,11 +109,11 @@ public class IntList1 {
         if (B == null) {
             return A;
         }
-        IntList1 new_list = new IntList1(A.first,null);//新列表的头
-        IntList1 currentTail = new_list;//新列表的尾部
+        IntList new_list = new IntList(A.first,null);//新列表的头
+        IntList currentTail = new_list;//新列表的尾部
         A = A.rest;
         while (A != null) {
-            currentTail.rest = new IntList1(A.first,null);//在尾部添加新节点
+            currentTail.rest = new IntList(A.first,null);//在尾部添加新节点
             currentTail = currentTail.rest;//更新尾部节点
             A = A.rest;
         }
@@ -121,10 +121,10 @@ public class IntList1 {
         return new_list;
     }
 
-    public static IntList1 reverse(IntList1 A){
-        IntList1 previous = null;
-        IntList1 current = A;
-        IntList1 original_next = null;
+    public static IntList reverse(IntList A){
+        IntList previous = null;
+        IntList current = A;
+        IntList original_next = null;
         while(current != null) {
             original_next = current.rest;
             current.rest = previous;
@@ -165,18 +165,18 @@ public class IntList1 {
      * Returns a new IntList containing the ints in ARGS. You are not
      * expected to read or understand this method.
      */
-    public static IntList1 of(Integer... args) {
-        IntList1 result, p;
+    public static IntList of(Integer... args) {
+        IntList result, p;
 
         if (args.length > 0) {
-            result = new IntList1(args[0], null);
+            result = new IntList(args[0], null);
         } else {
             return null;
         }
 
         int k;
         for (k = 1, p = result; k < args.length; k += 1, p = p.rest) {
-            p.rest = new IntList1(args[k], null);
+            p.rest = new IntList(args[k], null);
         }
         return result;
     }
@@ -187,11 +187,11 @@ public class IntList1 {
      * read or understand this method.
      */
     public boolean equals(Object x) {
-        if (!(x instanceof IntList1)) {
+        if (!(x instanceof IntList)) {
             return false;
         }
-        IntList1 L = (IntList1) x;
-        IntList1 p;
+        IntList L = (IntList) x;
+        IntList p;
 
         for (p = this; p != null && L != null; p = p.rest, L = L.rest) {
             if (p.first != L.first) {
@@ -216,9 +216,9 @@ public class IntList1 {
      * doesn't get stuck in an infinite loop.
      */
 
-    private int detectCycles(IntList1 A) {
-        IntList1 tortoise = A;
-        IntList1 hare = A;
+    private int detectCycles(IntList A) {
+        IntList tortoise = A;
+        IntList hare = A;
 
         if (A == null) {
             return 0;
@@ -257,7 +257,7 @@ public class IntList1 {
         int cycleLocation = detectCycles(this);
         int cnt = 0;
 
-        for (IntList1 p = this; p != null; p = p.rest) {
+        for (IntList p = this; p != null; p = p.rest) {
             out.format("%s%d", sep, p.first);
             sep = ", ";
 
