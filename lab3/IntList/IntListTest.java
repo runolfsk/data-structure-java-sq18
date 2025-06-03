@@ -2,6 +2,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import javax.swing.plaf.PanelUI;
+
 public class IntListTest {
 
     /**
@@ -69,5 +71,15 @@ public class IntListTest {
     /** If you're running this from the command line, you'll need
       * to add a main method. See ArithmeticTest.java for an
       * example. */
-
+    @Test(timeout = 1000)
+    public void reverse(){
+        IntList list = IntList.of(1,1,2,3,4);
+        IntList origin = IntList.of(1,1,2,3,4);
+        IntList exp = IntList.of(4,3,2,1,1);
+        assertEquals(exp,IntList.reverse(list));
+        assertNotEquals(list,origin);
+        IntList list_1 = IntList.of();
+        IntList exp_1 = IntList.reverse(list_1);
+        assertEquals(exp_1,IntList.reverse(list_1));
+    }
 }
