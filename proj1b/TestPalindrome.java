@@ -23,10 +23,12 @@ public class TestPalindrome {
         String word_2 = "Noon";
         String word_3 = "a";
         String word_4 = "";
+        String word_5 = "%";
         assertTrue(palindrome.isPalindrome(word_0));
         assertFalse(palindrome.isPalindrome(word_1));
         assertFalse(palindrome.isPalindrome(word_2));
         assertTrue(palindrome.isPalindrome(word_3));
         assertTrue(palindrome.isPalindrome(word_4));
+        assertTrue(palindrome.isPalindrome(word_5));
     }
 }
