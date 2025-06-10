@@ -93,4 +93,15 @@ public class LinkedListDeque <T> {
         }
         return currentNode.item;
     }
+
+    public void printDeque() {
+        if (this.size == 0) {
+
+        }
+        else {
+            for (int i = 0 ; i < this.size; i++) {
+                System.out.print(this.Sentinel_Node.next);
+            }
+        }
+    }
 }

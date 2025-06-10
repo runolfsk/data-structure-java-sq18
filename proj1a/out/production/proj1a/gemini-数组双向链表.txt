@@ -1,0 +1,270 @@
+/**
+ * 使用循环数组实现的 ArrayDeque。
+ * @param <T> 此双端队列中保存的元素类型。
+ */
+public class ArrayDeque<T> {
+    private T[] items; // 存储元素的数组
+    private int size; // 双端队列中的元素数量
+    private int nextFirst; // 下一个从头部添加的元素的索引
+    private int nextLast;  // 下一个从尾部添加的元素的索引
+
+    private static final int INITIAL_CAPACITY = 8; // 初始容量
+    private static final double MIN_USAGE_RATIO = 0.25; // 对于长度为 16 或更大的数组的最小使用率
+    private static final int RESIZE_FACTOR_UP = 2;     // 扩容时容量乘以的因子
+    // 缩容通过将容量减半来完成 (实际上 RESIZE_FACTOR_DOWN = 2)
+
+    /**
+     * 创建一个初始容量为 8 的空数组双端队列。
+     */
+    public ArrayDeque() {
+        items = (T[]) new Object[INITIAL_CAPACITY];
+        size = 0;
+        // 空双端队列的初始状态：
+        // nextFirst 指向 addFirst 将放置元素的位置。
+        // nextLast 指向 addLast 将放置元素的位置。
+        // 对于循环数组，通常的设置是让它们相邻或分开。
+        // 我们设置 nextFirst = 0, nextLast = 1。
+        // 如果 addFirst(X): items[0]=X, nextFirst 变为 items.length-1。
+        // 如果 addLast(Y): items[1]=Y, nextLast 变为 2。
+        // 第一个实际元素位于 (nextFirst + 1) % items.length。
+        // 最后一个实际元素位于 (nextLast - 1 + items.length) % items.length。
+        // 当为空时，(nextFirst + 1) % items.length == nextLast。(0+1)%8 == 1。这成立。
+        nextFirst = 0;
+        nextLast = 1;
+    }
+
+    /**
+     * 辅助方法，以循环方式计算前一个索引。
+     * @param index 当前索引。
+     * @return 前一个索引。
+     */
+    private int minusOne(int index) {
+        return (index - 1 + items.length) % items.length;
+    }
+
+    /**
+     * 辅助方法，以循环方式计算下一个索引。
+     * @param index 当前索引。
+     * @return 下一个索引。
+     */
+    private int plusOne(int index) {
+        return (index + 1) % items.length;
+    }
+
+    /**
+     * 将底层数组调整为目标容量。
+     * 元素被复制到新数组的开头 (索引 0 到 size-1)。
+     * @param capacity 数组的新容量。
+     */
+    private void resize(int capacity) {
+        T[] newArray = (T[]) new Object[capacity];
+        int currentOld = plusOne(nextFirst); // 旧数组中第一个实际元素的索引
+
+        for (int i = 0; i < size; i++) {
+            newArray[i] = items[currentOld];
+            currentOld = plusOne(currentOld); // 移动到旧数组中的下一个元素
+        }
+        items = newArray;
+
+        // 复制后，元素位于 newArray[0] 到 newArray[size-1]。
+        // nextFirst 应指向第一个元素 (newArray[0]) *之前* 的位置。
+        // 因此，nextFirst 变为 items.length - 1 (或 -1，由于取模运算，等同于 capacity - 1)。
+        nextFirst = items.length - 1;
+        // nextLast 应指向最后一个元素 (newArray[size-1]) *之后* 的位置。
+        // 因此，nextLast 变为 size。
+        nextLast = size;
+    }
+
+    /**
+     * 将类型为 T 的项添加到双端队列的前端。
+     * 均摊常数时间。
+     * @param item 要添加的项。
+     */
+    public void addFirst(T item) {
+        if (size == items.length) {
+            // 数组已满，将容量加倍来调整大小
+            resize(items.length * RESIZE_FACTOR_UP);
+        }
+        items[nextFirst] = item;
+        nextFirst = minusOne(nextFirst);
+        size++;
+    }
+
+    /**
+     * 将类型为 T 的项添加到双端队列的后端。
+     * 均摊常数时间。
+     * @param item 要添加的项。
+     */
+    public void addLast(T item) {
+        if (size == items.length) {
+            // 数组已满，将容量加倍来调整大小
+            resize(items.length * RESIZE_FACTOR_UP);
+        }
+        items[nextLast] = item;
+        nextLast = plusOne(nextLast);
+        size++;
+    }
+
+    /**
+     * 如果双端队列为空，则返回 true，否则返回 false。
+     * 常数时间。
+     * @return 如果双端队列为空则为 true，否则为 false。
+     */
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * 返回双端队列中的项数。
+     * 常数时间。
+     * @return 双端队列中的项数。
+     */
+    public int size() {
+        return size;
+    }
+
+    /**
+     * 从第一个到最后一个打印双端队列中的项，用空格分隔。
+     * 所有项打印完毕后，打印一个新行。
+     * (此方法通常用于调试，并且通常是此类作业的一部分)。
+     */
+    public void printDeque() {
+        if (isEmpty()) {
+            System.out.println();
+            return;
+        }
+        int current = plusOne(nextFirst); // 从第一个实际项开始
+        for (int i = 0; i < size; i++) {
+            System.out.print(items[current] + (i == size - 1 ? "" : " "));
+            current = plusOne(current);
+        }
+        System.out.println();
+    }
+
+    /**
+     * 移除并返回双端队列前端的项。
+     * 如果不存在这样的项，则返回 null。
+     * 均摊常数时间。
+     * @return 被移除的项，如果双端队列为空则为 null。
+     */
+    public T removeFirst() {
+        if (isEmpty()) {
+            return null;
+        }
+
+        nextFirst = plusOne(nextFirst); // 将 nextFirst 移动到实际第一个项的槽位
+        T removedItem = items[nextFirst];
+        items[nextFirst] = null; // 解除引用以进行垃圾回收
+        size--;
+
+        // 检查是否需要缩容：
+        // 如果数组长度为 16 或更大，并且使用率小于 25%
+        if (items.length >= 16 && (double) size / items.length < MIN_USAGE_RATIO) {
+            int newCapacity = items.length / 2;
+            // 确保新容量不低于初始容量。
+            newCapacity = Math.max(INITIAL_CAPACITY, newCapacity);
+            // 仅当新容量确实小于当前容量时才调整大小。
+            if (newCapacity < items.length) {
+                resize(newCapacity);
+            }
+        }
+        return removedItem;
+    }
+
+    /**
+     * 移除并返回双端队列后端的项。
+     * 如果不存在这样的项，则返回 null。
+     * 均摊常数时间。
+     * @return 被移除的项，如果双端队列为空则为 null。
+     */
+    public T removeLast() {
+        if (isEmpty()) {
+            return null;
+        }
+
+        nextLast = minusOne(nextLast); // 将 nextLast 移动到实际最后一个项的槽位
+        T removedItem = items[nextLast];
+        items[nextLast] = null; // 解除引用以进行垃圾回收
+        size--;
+
+        // 检查是否需要缩容：
+        // 如果数组长度为 16 或更大，并且使用率小于 25%
+        if (items.length >= 16 && (double) size / items.length < MIN_USAGE_RATIO) {
+            int newCapacity = items.length / 2;
+            // 确保新容量不低于初始容量。
+            newCapacity = Math.max(INITIAL_CAPACITY, newCapacity);
+            // 仅当新容量确实小于当前容量时才调整大小。
+            if (newCapacity < items.length) {
+                resize(newCapacity);
+            }
+        }
+        return removedItem;
+    }
+
+    /**
+     * 获取给定索引处的项，其中 0 是前端，1 是下一个项，依此类推。
+     * 如果不存在这样的项 (即索引越界)，则返回 null。
+     * 不会改变双端队列。
+     * 常数时间。
+     * @param index 要获取的项的从零开始的索引。
+     * @return 指定索引处的项，如果索引无效则为 null。
+     */
+    public T get(int index) {
+        if (index < 0 || index >= size) {
+            return null;
+        }
+        // 计算实际数组索引：
+        // 第一个项位于 (nextFirst + 1) % items.length。
+        // 逻辑索引 'index' 处的项距离第一个项 'index' 步。
+        int actualIndex = (nextFirst + 1 + index) % items.length;
+        return items[actualIndex];
+    }
+
+    /*
+    // 用于基本测试的示例 main 方法 (可选)
+    public static void main(String[] args) {
+        ArrayDeque<Integer> ad = new ArrayDeque<>();
+        System.out.println("队列是否为空? " + ad.isEmpty()); // true
+
+        ad.addLast(10);
+        ad.addFirst(5);
+        ad.addLast(20);
+        // 当前: 5 (在 items[0]), 10 (在 items[1]), 20 (在 items[2])
+        // nextFirst = 7, nextLast = 3, size = 3
+
+        System.out.println("双端队列内容: ");
+        ad.printDeque(); // 5 10 20
+
+        System.out.println("获取索引为 1 的元素: " + ad.get(1)); // 10
+        System.out.println("大小: " + ad.size()); // 3
+
+        System.out.println("移除第一个元素: " + ad.removeFirst()); // 5
+        ad.printDeque(); // 10 20
+
+        System.out.println("移除最后一个元素: " + ad.removeLast()); // 20
+        ad.printDeque(); // 10
+
+        System.out.println("队列是否为空? " + ad.isEmpty()); // false
+        System.out.println("移除最后一个元素: " + ad.removeLast()); // 10
+        ad.printDeque(); // (空行)
+        System.out.println("队列是否为空? " + ad.isEmpty()); // true
+        System.out.println("移除最后一个元素 (空队列): " + ad.removeLast()); // null
+
+        // 测试调整大小
+        ArrayDeque<String> adStr = new ArrayDeque<>();
+        for (int i = 0; i < 10; i++) { // 初始容量为 8
+            adStr.addLast("元素" + i);
+        }
+        System.out.println("添加10个元素后的大小: " + adStr.size()); // 10
+        System.out.println("内部数组长度: " + adStr.items.length); // 应该是 16 (从 8 调整大小而来)
+        adStr.printDeque();
+
+        for (int i = 0; i < 8; i++) { // 移除 8 个元素, 大小变为 2. 长度 16. 2/16 = 0.125 < 0.25
+            adStr.removeFirst();
+        }
+        System.out.println("移除8个元素后的大小: " + adStr.size()); // 2
+        System.out.println("移除元素后内部数组长度: " + adStr.items.length); // 应该是 8 (从 16 调整大小而来)
+        adStr.printDeque();
+    }
+    */
+}
