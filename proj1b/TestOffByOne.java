@@ -11,9 +11,9 @@ public class TestOffByOne {
     // Your tests go here.
     @Test
     public void TestisPalindrome() {
-        String word_0 = "flake";
+        String word_0 = "detrude";
         String word_1 = "flame";
         assertTrue(palindrome.isPalindrome(word_0,offByOne));
-        assertFalse(palindrome.isPalindrome(word_1,offByOne));
+        assertTrue(palindrome.isPalindrome(word_1,offByOne));
     }
 }
