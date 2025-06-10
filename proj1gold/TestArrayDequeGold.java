@@ -23,18 +23,14 @@ public class TestArrayDequeGold {
                 SolutionDeque.addLast(ToLastNum);
                 failureSequence.append("addLast(").append(ToLastNum).append(")\n");
             } else if (operationNumber == 2) {
-                if (StudentDeque.isEmpty()) {
-                    failureSequence.append("NullPointerException\n");
-                } else {
-                    failureSequence.append("removeFirst\n");
+                if (! StudentDeque.isEmpty()) {
+                    failureSequence.append("removeFirst()\n");
                     Integer studentRemoved = StudentDeque.removeFirst();
                     Integer SolutionRemoved = SolutionDeque.removeFirst();
                     assertEquals(failureSequence.toString(), studentRemoved, SolutionRemoved);
                 }
             } else {
-                if (StudentDeque.isEmpty()) {
-                    failureSequence.append("NullPointerException\n");
-                } else {
+                if (! StudentDeque.isEmpty()) {
                     failureSequence.append("removeLast()\n");
                     Integer studentRemoved = StudentDeque.removeLast();
                     Integer SolutionRemoved = SolutionDeque.removeLast();
