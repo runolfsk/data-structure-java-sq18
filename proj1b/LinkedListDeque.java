@@ -1,5 +1,4 @@
 
-
 public class LinkedListDeque <T> implements Deque<T> {
     private class Node {
         T item;
@@ -30,15 +29,18 @@ public class LinkedListDeque <T> implements Deque<T> {
 //        }
 //        return false;
 //    }
+    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
+    @Override
     /* 返回链表的长度 */
     public int size() {
         return size;
     }
 
+    @Override
     public void addFirst(T item) {
         Node newNode = new Node(item,Sentinel_Node,Sentinel_Node.next);
         Sentinel_Node.next.prev = newNode;
@@ -46,6 +48,7 @@ public class LinkedListDeque <T> implements Deque<T> {
         size = size + 1;
     }
 
+    @Override
     public void addLast(T item) {
         Node newNode = new Node(item,Sentinel_Node.prev,Sentinel_Node);
         Sentinel_Node.prev.next = newNode;
@@ -53,6 +56,7 @@ public class LinkedListDeque <T> implements Deque<T> {
         size = size + 1;
     }
 
+    @Override
     public T removeFirst() {
         if (size == 0) {
             return null;
@@ -69,6 +73,7 @@ public class LinkedListDeque <T> implements Deque<T> {
         return itemToRemove;
     }
 
+    @Override
     public T removeLast() {
         if (size == 0) {
             return null;
@@ -84,6 +89,7 @@ public class LinkedListDeque <T> implements Deque<T> {
         return itemToRemove;
     }
 
+    @Override
     public T get(int index) {
         if (index < 0 || index > size - 1) {
             return null;
@@ -95,6 +101,7 @@ public class LinkedListDeque <T> implements Deque<T> {
         return currentNode.item;
     }
 
+    @Override
     public void printDeque() {
         if (this.size == 0) {
 
