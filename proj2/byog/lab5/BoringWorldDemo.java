@@ -30,10 +30,7 @@ public class BoringWorldDemo {
                 world[x][y] = Tileset.WALL;
             }
         }
-
         // draws the world to the screen
         ter.renderFrame(world);
     }
-
-
 }
