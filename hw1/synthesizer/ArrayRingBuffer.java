@@ -86,15 +86,16 @@ public class ArrayRingBuffer<T> extends AbstractBoundedQueue<T> {
         return rb[first];
     }
 
+    @Override
     // Return the current array size, i.e., the number of elements it has
     public int fillCount() {
-        return fillCount;
+        return this.fillCount;
     }
 
     // TODO: When you get to part 5, implement the needed code to support iteration.
 
     @Override
-    public int capacipty() {
+    public int capacity() {
         return this.capacity;
     }
 

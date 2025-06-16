@@ -35,7 +35,7 @@ public class GuitarString {
         //       double r = Math.random() - 0.5;
         //
         //       Make sure that your random numbers are different from each other.
-        int capacity = this.buffer.capacipty();
+        int capacity = this.buffer.capacity();
         for (int i = 0; i < capacity; i = i + 1) {
             this.buffer.dequeue();
             this.buffer.enqueue(Math.random() - 0.5);
@@ -49,16 +49,14 @@ public class GuitarString {
         // TODO: Dequeue the front sample and enqueue a new sample that is
         //       the average of the two multiplied by the DECAY factor.
         //       Do not call StdAudio.play().
-        double old_value;
-        old_value = this.buffer.dequeue();
-        double end_value = (old_value + this.buffer.peek()) / 2 * 0.996;
+        double old_value = this.buffer.dequeue();
+        double end_value = (old_value + this.buffer.peek()) / 2 * DECAY;
         this.buffer.enqueue(end_value);
-        StdAudio.play(end_value);
     }
 
     /* Return the double at the front of the buffer. */
     public double sample() {
         // TODO: Return the correct thing.
-        return 0;
+        return buffer.peek();
     }
 }
